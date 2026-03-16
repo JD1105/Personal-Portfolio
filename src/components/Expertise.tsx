@@ -3,7 +3,6 @@ import "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faReact,
-  faDocker,
   faAndroid,
   faPython,
 } from "@fortawesome/free-brands-svg-icons";
