@@ -49,7 +49,7 @@ function Expertise() {
           <div className="skill">
             <FontAwesomeIcon icon={faReact} size="3x" />
             <h3>Full Stack Web Development</h3>
-            <p style={{ textAlign: "justify" }}>
+            <p style={descriptionStyle}>
               I develop modern full stack web applications using React, Node.js,
               Firebase and Flask. I have experience building scalable platforms
               . My focus is on building responsive interfaces, efficient backend
@@ -67,7 +67,7 @@ function Expertise() {
           <div className="skill">
             <FontAwesomeIcon icon={faAndroid} size="3x" />
             <h3>Android & Mobile Development</h3>
-            <p style={{ textAlign: "justify" }}>
+            <p style={descriptionStyle}>
               I build Android applications using Kotlin and Java. My projects
               include real-time navigation and location-sharing apps like
               TripTogether, integrating Google Maps API and Firebase for
@@ -85,11 +85,11 @@ function Expertise() {
           <div className="skill">
             <FontAwesomeIcon icon={faPython} size="3x" />
             <h3>Machine Learning & AI</h3>
-            <p style={{ textAlign: "justify" }}>
+            <p style={descriptionStyle}>
               I work on machine learning applications involving computer vision
-              and intelligent systems. I built SmileGenie, a CNN-based facial
-              expression detection app, and implemented automated testing for ML
-              models using Python and Pytest.
+              and intelligent systems. I built a CNN-based facial expression
+              detection app, and implemented automated testing for ML models
+              using Python.
             </p>
 
             <div className="flex-chips">
@@ -104,5 +104,11 @@ function Expertise() {
     </div>
   );
 }
+const descriptionStyle: React.CSSProperties = {
+  textAlign: "justify",
+  lineHeight: "1.7",
+  marginTop: "10px",
+  color: "#cfcfcf",
+};
 
 export default Expertise;

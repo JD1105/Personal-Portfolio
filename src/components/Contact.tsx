@@ -1,124 +1,214 @@
-import React, { useRef, useState } from "react";
-import "../assets/styles/Contact.scss";
-// import emailjs from '@emailjs/browser';
+import React, { useState } from "react";
+import emailjs from "@emailjs/browser";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import SendIcon from "@mui/icons-material/Send";
 import TextField from "@mui/material/TextField";
+import SendIcon from "@mui/icons-material/Send";
+
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+}
 
 function Contact() {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    message: "",
+  });
 
-  const [nameError, setNameError] = useState<boolean>(false);
-  const [emailError, setEmailError] = useState<boolean>(false);
-  const [messageError, setMessageError] = useState<boolean>(false);
+  const [success, setSuccess] = useState<string>("");
 
-  const form = useRef();
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
 
-  const sendEmail = (e: any) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setNameError(name === "");
-    setEmailError(email === "");
-    setMessageError(message === "");
+    const templateParams = {
+      name: formData.name,
+      email: formData.email,
+      message: formData.message,
+    };
 
-    /* Uncomment below if you want to enable the emailJS */
+    emailjs
+      .send(
+        "service_p0ud439",
+        "template_t95b3ok",
+        templateParams,
+        "lpbQwCTX_SiT12ZAA",
+      )
+      .then(() => {
+        setSuccess("Message sent successfully!");
 
-    // if (name !== '' && email !== '' && message !== '') {
-    //   var templateParams = {
-    //     name: name,
-    //     email: email,
-    //     message: message
-    //   };
-
-    //   console.log(templateParams);
-    //   emailjs.send('service_id', 'template_id', templateParams, 'api_key').then(
-    //     (response) => {
-    //       console.log('SUCCESS!', response.status, response.text);
-    //     },
-    //     (error) => {
-    //       console.log('FAILED...', error);
-    //     },
-    //   );
-    //   setName('');
-    //   setEmail('');
-    //   setMessage('');
-    // }
+        setFormData({
+          name: "",
+          email: "",
+          message: "",
+        });
+      })
+      .catch(() => {
+        setSuccess("Failed to send message");
+      });
   };
 
   return (
-    <div id="contact">
-      <div className="items-container">
-        <div className="contact_wrapper">
-          <h1>Contact Me</h1>
-          <p>
-            Got a project waiting to be realized? Let's collaborate and make it
-            happen!
-          </p>
-          <Box
-            ref={form}
-            component="form"
-            noValidate
-            autoComplete="off"
-            className="contact-form"
-          >
-            <div className="form-flex">
-              <TextField
-                required
-                id="outlined-required"
-                label="Your Name"
-                placeholder="What's your name?"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-                error={nameError}
-                helperText={nameError ? "Please enter your name" : ""}
-              />
-              <TextField
-                required
-                id="outlined-required"
-                label="Email / Phone"
-                placeholder="How can I reach you?"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-                error={emailError}
-                helperText={
-                  emailError ? "Please enter your email or phone number" : ""
-                }
-              />
-            </div>
+    <div style={styles.section}>
+      <div style={styles.container}>
+        <h1 style={styles.title}>Contact Me</h1>
+
+        <p style={styles.subtitle}>
+          Have a project idea or opportunity? Let's connect.
+        </p>
+
+        <Box component="form" onSubmit={sendEmail} style={styles.form}>
+          <div style={styles.row}>
             <TextField
-              required
-              id="outlined-multiline-static"
-              label="Message"
-              placeholder="Send me any inquiries or questions"
-              multiline
-              rows={10}
-              className="body-form"
-              value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-              }}
-              error={messageError}
-              helperText={messageError ? "Please enter the message" : ""}
+              name="name"
+              label="Your Name"
+              fullWidth
+              value={formData.name}
+              onChange={handleChange}
+              sx={inputStyle}
             />
-            <Button
-              variant="contained"
-              endIcon={<SendIcon />}
-              onClick={sendEmail}
-            >
-              Send
-            </Button>
-          </Box>
-        </div>
+
+            <TextField
+              name="email"
+              label="Email / Phone"
+              fullWidth
+              value={formData.email}
+              onChange={handleChange}
+              sx={inputStyle}
+            />
+          </div>
+
+          <TextField
+            name="message"
+            label="Message"
+            multiline
+            rows={6}
+            fullWidth
+            value={formData.message}
+            onChange={handleChange}
+            sx={inputStyle}
+          />
+
+          <Button
+            type="submit"
+            variant="contained"
+            endIcon={<SendIcon />}
+            sx={buttonStyle}
+          >
+            Send Message
+          </Button>
+
+          {success && <p style={styles.success}>{success}</p>}
+        </Box>
       </div>
     </div>
   );
 }
 
 export default Contact;
+
+const styles: React.CSSProperties | any = {
+  section: {
+    // background: "#000",
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "80px 20px",
+  },
+
+  container: {
+    maxWidth: "850px",
+    width: "100%",
+    padding: "50px",
+    borderRadius: "12px",
+    background: "#0a0a0a",
+    boxShadow: "0 0 40px rgba(255,255,255,0.05)",
+  },
+
+  title: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: "36px",
+    marginBottom: "10px",
+  },
+
+  subtitle: {
+    color: "#aaa",
+    textAlign: "center",
+    marginBottom: "40px",
+  },
+
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "25px",
+  },
+
+  row: {
+    display: "flex",
+    gap: "20px",
+    flexWrap: "wrap",
+  },
+
+  success: {
+    color: "#4CAF50",
+    marginTop: "10px",
+  },
+};
+
+const inputStyle = {
+  input: {
+    color: "#fff",
+  },
+
+  textarea: {
+    color: "#fff",
+  },
+
+  label: {
+    color: "#aaa",
+  },
+
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "#fff",
+    },
+
+    "&:hover fieldset": {
+      borderColor: "#fff",
+    },
+
+    "&.Mui-focused fieldset": {
+      borderColor: "#fff",
+    },
+  },
+
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "#fff",
+  },
+};
+
+const buttonStyle = {
+  background: "#fff",
+  color: "#000",
+  padding: "12px",
+  fontWeight: "600",
+
+  "&:hover": {
+    background: "#ddd",
+  },
+};
